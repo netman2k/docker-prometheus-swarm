@@ -1,0 +1,142 @@
+#TODO
+# Reference
+# - https://medium.com/@basi/docker-swarm-metrics-in-prometheus-e02a6a5745a 
+#
+# TODO
+# - cadvisor cannot monitoring OOM due to unable to read a file, /dev/kmsg
+version: "3.3"
+
+networks:
+  monitoring:
+
+configs:
+  docker-socat-entrypoint.sh:
+    file: ./docker-socat-entrypoint.sh
+  prometheus.yml:
+    file: ./prometheus/prometheus.yml
+#  alert.rules_tasks:
+#    file: ./prometheus/alert.rules_tasks
+#  alert.rules_nodes:
+#    file: ./prometheus/alert.rules_nodes
+#  alert.rules_service-groups:
+#    file: ./prometheus/alert.rules_service-groups
+
+services:
+  cadvisor:
+    image: google/cadvisor:${CADVISOR_VERSION:-v0.28.3}
+    networks:
+      - monitoring
+    volumes:
+      # For >= 0.29.0
+      #- /var/run/containerd/containerd.sock:/var/run/containerd/containerd.sock:readonly
+      - /var/run/docker.sock:/var/run/docker.sock:readonly
+      - /:/rootfs:readonly
+      - /var/run:/var/run
+      - /sys:/sys:readonly
+      - /dev/disk:/dev/disk:readonly
+      #- /dev/kmsg:/dev/kmsg:readonly
+      #- /cgroup:/cgroup,readonly
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 128M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+  node-exporter:
+    image: prom/node-exporter:${NODE_EXPORTER_VERSION:-v0.16.0}
+    networks:
+      - monitoring
+    volumes:
+      - /proc:/host/proc
+      - /sys:/host/sys
+      - /:/rootfs
+      - /etc/hostname:/etc/host_hostname
+    hostname: "{{.Node.ID}}"
+    environment:
+      HOST_HOSTNAME: /etc/host_hostname
+    command: 
+      - '--path.procfs=/host/proc' 
+      - '--path.sysfs=/host/sys'
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 32M
+        reservations:
+          cpus: '0.10'
+          memory: 16M
+
+  docker-exporter:
+    image: alpine/socat:1.0.3
+    configs:
+     - source: docker-socat-entrypoint.sh
+       target: /entrypoint.sh
+       mode: 0777
+    entrypoint:
+       - /entrypoint.sh
+    networks:
+      - monitoring
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: 6M
+        reservations:
+          cpus: '0.05'
+          memory: 4M
+
+  alertmanager:
+    image: basi/alertmanager:${ALERTMANAGER_VERSION:-v0.8.0}
+    networks:
+      - monitoring
+      # - logging
+    ports:
+     - "9093:9093"
+    environment:
+      SLACK_API: ${SLACK_API:-YOURTOKENGOESHERE}
+      LOGSTASH_URL: http://logstash:8080/
+    command: -config.file=/etc/alertmanager/config.yml
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.01'
+          memory: 32M
+        reservations:
+          cpus: '0.01'
+          memory: 16M
+
+  prometheus:
+    #image: basi/prometheus-swarm:${PROMETHEUS_SWARM_VERSION:-latest}
+    image: prom/prometheus:${PROMETHEUS_SWARM_VERSION:-v2.3.0}
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+    configs:
+      - source: prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+#      - source: alert.rules_tasks
+#        target: /etc/prometheus/alert.rules_tasks
+#      - source: alert.rules_nodes
+#        target: /etc/prometheus/alert.rules_nodes
+#      - source: alert.rules_service-groups
+#        target: /etc/prometheus/alert.rules_service-groups
+    #command: -config.file=/etc/prometheus/prometheus.yml -storage.local.path=/prometheus -web.console.libraries=/etc/prometheus/console_libraries -web.console.templates=/etc/prometheus/consoles -alertmanager.url=http://alertmanager:9093
+    command: [ "--config.file=/etc/prometheus/prometheus.yml", "--web.console.libraries=/etc/prometheus/console_libraries", "--web.console.templates=/etc/prometheus/consoles" ]
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1024M
+        reservations:
+          cpus: '0.50'
+          memory: 128M
