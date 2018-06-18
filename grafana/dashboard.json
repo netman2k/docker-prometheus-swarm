@@ -59,7 +59,7 @@
   "gnetId": 893,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1529311907254,
+  "iteration": 1529311907257,
   "links": [],
   "panels": [
     {
@@ -711,6 +711,7 @@
       "targets": [
         {
           "expr": "sum(rate(container_cpu_system_seconds_total[1m]))",
+          "format": "time_series",
           "hide": true,
           "intervalFactor": 2,
           "legendFormat": "a",
@@ -719,6 +720,7 @@
         },
         {
           "expr": "sum(rate(container_cpu_system_seconds_total{name=~\".+\"}[1m]))",
+          "format": "time_series",
           "hide": true,
           "interval": "",
           "intervalFactor": 2,
@@ -728,6 +730,7 @@
         },
         {
           "expr": "sum(rate(container_cpu_system_seconds_total{id=\"/\"}[1m]))",
+          "format": "time_series",
           "hide": true,
           "interval": "",
           "intervalFactor": 2,
@@ -738,7 +741,8 @@
         },
         {
           "expr": "sum(rate(process_cpu_seconds_total[$interval])) * 100",
-          "hide": false,
+          "format": "time_series",
+          "hide": true,
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "host",
@@ -748,7 +752,8 @@
         },
         {
           "expr": "sum(rate(container_cpu_system_seconds_total{name=~\".+\"}[1m])) + sum(rate(container_cpu_system_seconds_total{id=\"/\"}[1m])) + sum(rate(process_cpu_seconds_total[1m]))",
-          "hide": true,
+          "format": "time_series",
+          "hide": false,
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "D",
@@ -2337,6 +2342,5 @@
   "timezone": "browser",
   "title": "Docker and system monitoring",
   "uid": "NZGW3uSik",
-  "version": 12
+  "version": 13
 }
-
