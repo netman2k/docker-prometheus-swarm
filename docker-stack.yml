@@ -12,6 +12,8 @@ networks:
 configs:
   docker-socat-entrypoint.sh:
     file: ./docker-socat-entrypoint.sh
+  node-exporter-entrypoint.sh:
+    file: ./docker-node-exporter-entrypoint.sh
   prometheus.yml:
     file: ./prometheus/prometheus.yml
 #  alert.rules_tasks:
@@ -57,18 +59,25 @@ services:
     hostname: "{{.Node.ID}}"
     environment:
       HOST_HOSTNAME: /etc/host_hostname
+    configs:
+      - source: node-exporter-entrypoint.sh
+        target: /docker-entrypoint.sh
+        mode: 0777
+    entrypoint:
+      - /docker-entrypoint.sh
     command: 
       - '--path.procfs=/host/proc' 
       - '--path.sysfs=/host/sys'
+      - "--collector.textfile.directory=${COLLECTOR_TEXTFILE_DIR:-/tmp/prometheus}"
     deploy:
       mode: global
       resources:
         limits:
           cpus: '0.10'
-          memory: 32M
+          memory: 64M
         reservations:
           cpus: '0.10'
-          memory: 16M
+          memory: 32M
 
   docker-exporter:
     image: alpine/socat:1.0.3
@@ -85,10 +94,10 @@ services:
       resources:
         limits:
           cpus: '0.05'
-          memory: 6M
+          memory: 60M
         reservations:
           cpus: '0.05'
-          memory: 4M
+          memory: 40M
 
   alertmanager:
     image: basi/alertmanager:${ALERTMANAGER_VERSION:-v0.8.0}
