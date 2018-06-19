@@ -59,7 +59,7 @@
   "gnetId": 893,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1529311907257,
+  "iteration": 1529371469663,
   "links": [],
   "panels": [
     {
@@ -1326,7 +1326,7 @@
           "format": "bytes",
           "label": "",
           "logBase": 1,
-          "max": 16000000000,
+          "max": "1000000000000",
           "min": 0,
           "show": true
         },
@@ -2342,5 +2342,5 @@
   "timezone": "browser",
   "title": "Docker and system monitoring",
   "uid": "NZGW3uSik",
-  "version": 13
+  "version": 14
 }
