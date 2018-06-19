@@ -71,13 +71,16 @@ services:
       - "--collector.textfile.directory=${COLLECTOR_TEXTFILE_DIR:-/tmp/prometheus}"
     deploy:
       mode: global
+      update_config:
+        parallelism: 2
+        delay: 20s
       resources:
         limits:
           cpus: '0.10'
-          memory: 64M
+          memory: 96M
         reservations:
           cpus: '0.10'
-          memory: 32M
+          memory: 64M
 
   docker-exporter:
     image: alpine/socat:1.0.3
