@@ -14,7 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "5.1.3"
+      "version": "5.0.4"
     },
     {
       "type": "panel",
@@ -59,7 +59,7 @@
   "gnetId": 893,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1529371469663,
+  "iteration": 1530256736213,
   "links": [],
   "panels": [
     {
@@ -127,7 +127,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "time() - node_boot_time_seconds{instance=~\"$server:.*\"}",
+          "expr": "topk(1, (time() - node_boot_time_seconds))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -137,7 +137,7 @@
         }
       ],
       "thresholds": "",
-      "title": "Uptime",
+      "title": "Swarm Uptime",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -213,6 +213,7 @@
       "targets": [
         {
           "expr": "count(rate(container_last_seen{name=~\".+\"}[$interval]))",
+          "format": "time_series",
           "intervalFactor": 2,
           "refId": "A",
           "step": 1800
@@ -295,7 +296,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "min((node_filesystem_size_bytes{fstype=~\"xfs|ext4\",instance=~\"$server:.*\"} - node_filesystem_free_bytes{fstype=~\"xfs|ext4\",instance=~\"$server:.*\"} )/ node_filesystem_size_bytes{fstype=~\"xfs|ext4\",instance=~\"$server:.*\"})",
+          "expr": "min((node_filesystem_size_bytes{fstype=~\"xfs|ext4\",instance=~\"$server.*\"} - node_filesystem_free_bytes{fstype=~\"xfs|ext4\",instance=~\"$server.*\"} )/ node_filesystem_size_bytes{fstype=~\"xfs|ext4\",instance=~\"$server.*\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -380,7 +381,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "((node_memory_MemTotal_bytes{instance=~\"$server:.*\"} - node_memory_MemAvailable_bytes{instance=~\"$server:.*\"}) / node_memory_MemTotal_bytes{instance=~\"$server:.*\"}) * 100",
+          "expr": "((node_memory_MemTotal_bytes{instance=~\"$server.*\"} - node_memory_MemAvailable_bytes{instance=~\"$server.*\"}) / node_memory_MemTotal_bytes{instance=~\"$server.*\"}) * 100",
           "format": "time_series",
           "intervalFactor": 2,
           "refId": "A",
@@ -464,7 +465,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "(node_memory_SwapTotal_bytes{instance=~'$server:.*'} - node_memory_SwapFree_bytes{instance=~'$server:.*'})",
+          "expr": "(node_memory_SwapTotal_bytes{instance=~'$server.*'} - node_memory_SwapFree_bytes{instance=~'$server.*'})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -549,8 +550,9 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "node_load1{instance=~\"$server:.*\"} / count by(job, instance)(count by(job, instance, cpu)(node_cpu_seconds_total{instance=~\"$server:.*\"}))",
+          "expr": "node_load1{instance=~\"$server.*\"} / count by(job, instance)(count by(job, instance, cpu)(node_cpu_seconds_total{instance=~\"$server.*\"}))",
           "format": "time_series",
+          "hide": false,
           "intervalFactor": 2,
           "refId": "A",
           "step": 1800
@@ -612,6 +614,7 @@
       "targets": [
         {
           "expr": "sum(rate(container_network_receive_bytes_total{id=\"/\"}[$interval])) by (id)",
+          "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "RECEIVED",
           "refId": "A",
@@ -619,6 +622,7 @@
         },
         {
           "expr": "- sum(rate(container_network_transmit_bytes_total{id=\"/\"}[$interval])) by (id)",
+          "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
           "legendFormat": "SENT",
@@ -2295,12 +2299,12 @@
         "hide": 0,
         "includeAll": true,
         "label": "Node",
-        "multi": false,
+        "multi": true,
         "name": "server",
         "options": [],
-        "query": "label_values(node_boot_time_seconds, instance)",
+        "query": "label_values(host, instance)",
         "refresh": 1,
-        "regex": "/([^:]+):.*/",
+        "regex": "/(.*):.*/",
         "sort": 0,
         "tagValuesQuery": null,
         "tags": [],
@@ -2311,8 +2315,8 @@
     ]
   },
   "time": {
-    "from": "now-5m",
-    "to": "now"
+    "from": "now/w",
+    "to": "now/w"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -2342,5 +2346,5 @@
   "timezone": "browser",
   "title": "Docker and system monitoring",
   "uid": "NZGW3uSik",
-  "version": 14
+  "version": 2
 }
