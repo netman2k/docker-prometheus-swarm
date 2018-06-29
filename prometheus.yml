@@ -41,3 +41,10 @@ scrape_configs:
       type: 'A'
       port: 4999
 
+  - job_name: 'mongo-exporter'
+    dns_sd_configs:
+    - names:
+      - 'tasks.mongo_mongodb-exporter'
+      type: 'A'
+      port: 9216
+
