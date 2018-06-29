@@ -1,28 +1,11 @@
 #TODO
 # Reference
 # - https://medium.com/@basi/docker-swarm-metrics-in-prometheus-e02a6a5745a 
+# - https://github.com/prometheus/node_exporter
 #
 # TODO
 # - cadvisor cannot monitoring OOM due to unable to read a file, /dev/kmsg
 version: "3.3"
-
-networks:
-  monitoring:
-
-configs:
-  docker-socat-entrypoint.sh:
-    file: ./docker-socat-entrypoint.sh
-  node-exporter-entrypoint.sh:
-    file: ./docker-node-exporter-entrypoint.sh
-  prometheus.yml:
-    file: ./prometheus/prometheus.yml
-#  alert.rules_tasks:
-#    file: ./prometheus/alert.rules_tasks
-#  alert.rules_nodes:
-#    file: ./prometheus/alert.rules_nodes
-#  alert.rules_service-groups:
-#    file: ./prometheus/alert.rules_service-groups
-
 services:
   cadvisor:
     image: google/cadvisor:${CADVISOR_VERSION:-v0.28.3}
@@ -129,6 +112,8 @@ services:
     image: prom/prometheus:${PROMETHEUS_SWARM_VERSION:-v2.3.0}
     ports:
       - "9090:9090"
+    volumes:
+      - prometheus:/prometheus
     networks:
       - monitoring
     configs:
@@ -152,3 +137,24 @@ services:
         reservations:
           cpus: '0.50'
           memory: 128M
+
+configs:
+  docker-socat-entrypoint.sh:
+    file: ./docker-socat-entrypoint.sh
+  node-exporter-entrypoint.sh:
+    file: ./docker-node-exporter-entrypoint.sh
+  prometheus.yml:
+    file: ./prometheus.yml
+#  alert.rules_tasks:
+#    file: ./prometheus/alert.rules_tasks
+#  alert.rules_nodes:
+#    file: ./prometheus/alert.rules_nodes
+#  alert.rules_service-groups:
+#    file: ./prometheus/alert.rules_service-groups
+
+volumes:
+  prometheus: 
+networks:
+  monitoring:
+    external:
+      name: ${MONITORING_NETWORK_NAME:-monitoring}
