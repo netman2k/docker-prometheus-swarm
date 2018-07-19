@@ -59,7 +59,7 @@
   "gnetId": 893,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1530256736213,
+  "iteration": 1531998533603,
   "links": [],
   "panels": [
     {
@@ -124,12 +124,14 @@
         "lineColor": "rgb(31, 120, 193)",
         "show": false
       },
-      "tableColumn": "",
+      "tableColumn": "instance",
       "targets": [
         {
           "expr": "topk(1, (time() - node_boot_time_seconds))",
           "format": "time_series",
           "hide": false,
+          "instant": true,
+          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "",
           "refId": "A",
@@ -806,40 +808,6 @@
       }
     },
     {
-      "alert": {
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                1.25
-              ],
-              "type": "gt"
-            },
-            "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "frequency": "60s",
-        "handler": 1,
-        "name": "Panel Title alert",
-        "noDataState": "keep_state",
-        "notifications": [
-          {
-            "id": 1
-          }
-        ]
-      },
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -887,15 +855,7 @@
           "step": 600
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 1.25
-        }
-      ],
+      "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
       "title": "Load",
@@ -997,7 +957,7 @@
         "current": false,
         "max": false,
         "min": false,
-        "show": false,
+        "show": true,
         "total": false,
         "values": false
       },
@@ -1020,11 +980,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "node_filesystem_size_bytes{fstype=\"xfs\"} - node_filesystem_free_bytes{fstype=\"xfs\"}",
+          "expr": "node_filesystem_size_bytes{fstype=\"xfs\",mountpoint=~\"/rootfs.*\"} - node_filesystem_free_bytes{fstype=\"xfs\",mountpoint=~\"/rootfs.*\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
-          "legendFormat": "Used Disk Space",
+          "legendFormat": "{{instance}} {{mountpoint}}",
           "refId": "A",
           "step": 600
         }
@@ -1060,7 +1020,7 @@
           "format": "bytes",
           "label": "",
           "logBase": 1,
-          "max": 1000000000000,
+          "max": null,
           "min": 0,
           "show": true
         },
@@ -1079,40 +1039,6 @@
       }
     },
     {
-      "alert": {
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                10000000000
-              ],
-              "type": "gt"
-            },
-            "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "frequency": "60s",
-        "handler": 1,
-        "name": "Available Memory alert",
-        "noDataState": "keep_state",
-        "notifications": [
-          {
-            "id": 1
-          }
-        ]
-      },
       "aliasColors": {
         "Available Memory": "#7EB26D",
         "Unavailable Memory": "#7EB26D"
@@ -1290,24 +1216,16 @@
           "step": 30
         },
         {
-          "expr": "node_memory_Inactive_bytes + node_memory_MemFree_bytes + node_memory_MemAvailable_bytes",
+          "expr": "node_memory_Inactive_bytes{instance=~\"$server.*\"} + node_memory_MemFree_bytes{instance=~\"$server.*\"} + node_memory_MemAvailable_bytes{instance=~\"$server.*\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
-          "legendFormat": "",
+          "legendFormat": "{{instance}}",
           "refId": "P",
           "step": 40
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 10000000000
-        }
-      ],
+      "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
       "title": "Available Memory",
@@ -1330,7 +1248,7 @@
           "format": "bytes",
           "label": "",
           "logBase": 1,
-          "max": "1000000000000",
+          "max": null,
           "min": 0,
           "show": true
         },
@@ -2315,8 +2233,8 @@
     ]
   },
   "time": {
-    "from": "now/w",
-    "to": "now/w"
+    "from": "now-1h",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -2346,5 +2264,5 @@
   "timezone": "browser",
   "title": "Docker and system monitoring",
   "uid": "NZGW3uSik",
-  "version": 2
+  "version": 6
 }

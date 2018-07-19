@@ -52,6 +52,7 @@ services:
       - '--path.procfs=/host/proc' 
       - '--path.sysfs=/host/sys'
       - "--collector.textfile.directory=${COLLECTOR_TEXTFILE_DIR:-/tmp/prometheus}"
+      - "--collector.filesystem.ignored-mount-points=\"^/(dev|etc|proc|sys|var/lib/docker)($$|/)\""
     deploy:
       mode: global
       update_config:
