@@ -39,6 +39,9 @@ services:
       - /sys:/host/sys
       - /:/rootfs
       - /etc/hostname:/etc/host_hostname
+    # @TIP
+    # You can join instance label and host label via this query
+    # (node_boot_time_seconds{job="node-exporter"} ) * on(instance) group_left(host) (host{job="node-exporter"})
     hostname: "{{.Node.ID}}"
     environment:
       HOST_HOSTNAME: /etc/host_hostname
