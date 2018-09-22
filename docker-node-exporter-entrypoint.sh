@@ -11,7 +11,7 @@ if [ -z ${HOST_HOSTNAME+x} ]; then
 else
   host_hostname=$(cat ${HOST_HOSTNAME})
   [ -d $COLLECTOR_TEXTFILE_DIR ] || mkdir -p $COLLECTOR_TEXTFILE_DIR
-  echo "host{host=\"$host_hostname\", node=\"$(hostname)\"} 1" > $COLLECTOR_TEXTFILE_DIR/host_hostname.prom
+  echo "node_meta{node_name=\"$host_hostname\", node_id=\"$(hostname)\", container_label_com_docker_swarm_node_id=\"${hostname}\"} 1" > $COLLECTOR_TEXTFILE_DIR/host_hostname.prom
 fi
 
 # if command starts with an option, prepend node-exporter binary
