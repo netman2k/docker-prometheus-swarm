@@ -113,7 +113,7 @@ services:
 
   prometheus:
     #image: basi/prometheus-swarm:${PROMETHEUS_SWARM_VERSION:-latest}
-    image: prom/prometheus:${PROMETHEUS_SWARM_VERSION:-v2.3.0}
+    image: prom/prometheus:${PROMETHEUS_SWARM_VERSION:-v2.4.2}
     ports:
       - "9090:9090"
     volumes:
