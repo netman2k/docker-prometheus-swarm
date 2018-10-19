@@ -12,6 +12,7 @@ services:
     image: google/cadvisor:${CADVISOR_VERSION:-latest}
     networks:
       - monitoring
+    command: -logtostderr -docker_only
     volumes:
       # For >= 0.29.0
       #- /var/run/containerd/containerd.sock:/var/run/containerd/containerd.sock:readonly
@@ -26,10 +27,10 @@ services:
       mode: global
       resources:
         limits:
-          cpus: '0.20'
+          #cpus: '0.20'
           memory: 128M
         reservations:
-          cpus: '0.10'
+          #cpus: '0.10'
           memory: 64M
   node-exporter:
     image: prom/node-exporter:${NODE_EXPORTER_VERSION:-v0.16.0}
@@ -146,6 +147,9 @@ services:
         reservations:
           cpus: '0.50'
           memory: 1024M
+      placement:
+        constraints:
+          - node.labels.storage == ssd      
 
 configs:
   docker-socat-entrypoint.sh:
