@@ -1,6 +1,6 @@
 global:
-  scrape_interval:     30s
-  evaluation_interval: 30s
+  scrape_interval:     5s
+  evaluation_interval: 5s
 
   # Attach these labels to any time series or alerts when communicating with
   # external systems (federation, remote storage, Alertmanager).
@@ -40,11 +40,4 @@ scrape_configs:
       - 'tasks.docker-exporter'
       type: 'A'
       port: 4999
-
-  - job_name: 'mongo-exporter'
-    dns_sd_configs:
-    - names:
-      - 'tasks.mongo_mongodb-exporter'
-      type: 'A'
-      port: 9216
 
