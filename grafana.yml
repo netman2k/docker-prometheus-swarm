@@ -1,0 +1,17 @@
+version: "3.3"
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - monitoring    
+    environment:
+      - "GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWD:-@dminP@ssw0rd}"
+networks:
+  monitoring:
+    external:
+      name: ${MONITORING_NETWORK_NAME:-monitoring}
+
+volumes:
+  - grafana: {}
