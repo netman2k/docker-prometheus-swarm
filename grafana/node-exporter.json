@@ -14,7 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "5.2.4"
+      "version": "5.3.1"
     },
     {
       "type": "panel",
@@ -53,7 +53,7 @@
   "gnetId": 1860,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1540296220840,
+  "iteration": 1540298782793,
   "links": [],
   "panels": [
     {
@@ -21185,6 +21185,7 @@
         "query": "label_values(node_boot_time_seconds, job)",
         "refresh": 1,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 1,
         "tagValuesQuery": "",
         "tags": [],
@@ -21205,6 +21206,7 @@
         "query": "node_meta",
         "refresh": 1,
         "regex": "/instance=\"([^:]+):.*/",
+        "skipUrlSync": false,
         "sort": 1,
         "tagValuesQuery": "label_values({node_id=\"$tag\"},node_name)",
         "tags": [
@@ -21241,6 +21243,7 @@
         "query": "label_values(node_boot_time_seconds{instance=~\"$node:(.*)\"}, instance)",
         "refresh": 1,
         "regex": "/[^:]+:(.*)/",
+        "skipUrlSync": false,
         "sort": 3,
         "tagValuesQuery": "",
         "tags": [],
@@ -21251,7 +21254,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {
@@ -21282,5 +21285,5 @@
   "timezone": "browser",
   "title": "Node Exporter Full",
   "uid": "VVONlHxiz",
-  "version": 6
+  "version": 2
 }
