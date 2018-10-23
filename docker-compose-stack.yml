@@ -143,13 +143,14 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 4096M
+          memory: 8192M
         reservations:
           cpus: '0.50'
-          memory: 1024M
+          memory: 4096M
       placement:
         constraints:
-          - node.labels.storage == ssd      
+          - node.labels.service==prometheus
+          #- node.labels.storage == ssd      
 
 configs:
   docker-socat-entrypoint.sh:
