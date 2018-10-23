@@ -125,12 +125,10 @@ services:
     configs:
       - source: prometheus.yml
         target: /etc/prometheus/prometheus.yml
-#      - source: alert.rules_tasks
-#        target: /etc/prometheus/alert.rules_tasks
-#      - source: alert.rules_nodes
-#        target: /etc/prometheus/alert.rules_nodes
-#      - source: alert.rules_service-groups
-#        target: /etc/prometheus/alert.rules_service-groups
+      - source: node_rules
+        target: /etc/prometheus/swarm_node.rules.yml
+      - source: task_rules
+        target: /etc/prometheus/swarm_task.rules.yml
     #command: -config.file=/etc/prometheus/prometheus.yml -storage.local.path=/prometheus -web.console.libraries=/etc/prometheus/console_libraries -web.console.templates=/etc/prometheus/consoles -alertmanager.url=http://alertmanager:9093
     command: 
       - --config.file=/etc/prometheus/prometheus.yml
@@ -158,13 +156,11 @@ configs:
   node-exporter-entrypoint.sh:
     file: ./docker-node-exporter-entrypoint.sh
   prometheus.yml:
-    file: ./prometheus.yml
-#  alert.rules_tasks:
-#    file: ./prometheus/alert.rules_tasks
-#  alert.rules_nodes:
-#    file: ./prometheus/alert.rules_nodes
-#  alert.rules_service-groups:
-#    file: ./prometheus/alert.rules_service-groups
+    file: ./prometheus/conf/prometheus.yml
+  node_rules:
+    file: ./prometheus/rules/swarm_node.rules.yml
+  task_rules:
+    file: ./prometheus/rules/swarm_task.rules.yml
 
 volumes:
   prometheus: 
