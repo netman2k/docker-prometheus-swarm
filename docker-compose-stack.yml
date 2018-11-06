@@ -143,10 +143,10 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 8192M
-        reservations:
-          cpus: '0.50'
           memory: 4096M
+        reservations:
+          cpus: '0.40'
+          memory: 3182M
       placement:
         constraints:
           - node.labels.service==prometheus

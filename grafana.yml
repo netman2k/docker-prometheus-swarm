@@ -11,9 +11,16 @@ services:
     volumes:
       - grafana:/var/lib/grafana
     deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.50'
+        reservations:
+          cpus: '0.30'
       placement:
         constraints:
-          - node.labels.service==prometheus
+          - "node.labels.${GRAFANA_LABEL:-service==grafana}"
 
 networks:
   monitoring:
