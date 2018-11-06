@@ -28,7 +28,7 @@ You might need to apply this IPTables rule to work docker-exporter service
 This rule will allow the container to reach the host on it's own exposed port which is 4999
 https://github.com/moby/moby/issues/24370
 ```
-iptables -I INPUT 1 docker_gwbridge -j ACCEPT
+iptables -I INPUT 1 -i docker_gwbridge -j ACCEPT
 ```
 
 ### Deploy Grafana Dashboard
