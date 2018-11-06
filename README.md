@@ -24,6 +24,11 @@ docker node update --label-add service=prometheus infa-swarm-t1003
 ```bash
 docker stack deploy -c docker-compose-stack.yml prometheus
 ```
+You might need to apply this IPTables rule to work docker-exporter service
+This rule will allow the container to reach the host on it's own exposed port which is 4999
+```
+iptables -I INPUT 1 docker_gwbridge -j ACCEPT
+```
 
 ### Deploy Grafana Dashboard
 ```bash
