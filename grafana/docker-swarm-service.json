@@ -1835,7 +1835,7 @@
   "schemaVersion": 16,
   "style": "dark",
   "tags": [
-    "swarmprom"
+    "swarm"
   ],
   "templating": {
     "list": [
