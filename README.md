@@ -13,8 +13,23 @@ Before deploying, you need to create an overlay network for monitoring with prom
 docker network create --driver overlay --attachable monitoring
 ```
 
+### Set label on a specific host
+Prometheus uses internal TSDB which needs a persistent volume
+I set the constraint on Prometheus service therefore you should set the service=prometheus label
+```
+docker node update --label-add service=prometheus infa-swarm-t1003
+```
+
 ### Deploy prometheus stack
 ```bash
 docker stack deploy -c docker-compose-stack.yml prometheus
 ```
 
+### Deploy Grafana Dashboard
+```bash
+docker stack deploy -c grafana.yml grafana
+```
+
+Now you can access your Grafana dashboard via this URL
+
+* http://<IP one of your swarm node>:3000
