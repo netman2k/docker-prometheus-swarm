@@ -33,3 +33,19 @@ docker stack deploy -c grafana.yml grafana
 Now you can access your Grafana dashboard via this URL
 
 * http://<IP one of your swarm node>:3000
+
+### Add a data source
+
+![1541478950386](assets/1541478950386.png)
+
+### Import Dashboards
+
+You can find some predefined dashboard JSON files in the grafana directory
+
+Import them to create essential dashboards
+
+* Prometheus 2.0 stats Dashboard: prometheus-stats.json
+* Docker Swarm Nodes Dashboard: docker-swarm-node.json  
+* Docker Swarm Services Dashboard: docker-swarm-service.json  
+* Node Exporter Full Dashboard: node-exporter.json  
+
