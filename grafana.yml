@@ -10,6 +10,11 @@ services:
       - "GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWD:-@dminP@ssw0rd}"
     volumes:
       - grafana:/var/lib/grafana
+    deploy:
+      placement:
+        constraints:
+          - node.labels.service==prometheus
+
 networks:
   monitoring:
     external:
