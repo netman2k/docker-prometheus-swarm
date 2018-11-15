@@ -129,9 +129,6 @@ services:
         target: /etc/prometheus/alert.rules_nodes
       - source: task_rules
         target: /etc/prometheus/alert.rules_tasks
-      #- source: service_group_rules
-      #  target: /etc/prometheus/alert.rules_tasks
-    #command: -config.file=/etc/prometheus/prometheus.yml -storage.local.path=/prometheus -web.console.libraries=/etc/prometheus/console_libraries -web.console.templates=/etc/prometheus/consoles -alertmanager.url=http://alertmanager:9093
     command: 
       - --config.file=/etc/prometheus/prometheus.yml
       - --web.console.libraries=/etc/prometheus/console_libraries
@@ -150,7 +147,6 @@ services:
       placement:
         constraints:
           - node.labels.service==prometheus
-          #- node.labels.storage == ssd      
 
 configs:
   docker-socat-entrypoint.sh:
